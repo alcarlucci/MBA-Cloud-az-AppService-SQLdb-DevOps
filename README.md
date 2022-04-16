@@ -7,11 +7,17 @@ Desafio Final - AppService-SQLdb-DevOps
 
 https://github.com/Azure-Samples/msdocs-app-service-sqldb-dotnetcore
 
-**2. Criação de um Azure Web App S1 (App Service) com dois Slots para implantação, sendo um para produção e outro para desenvolvimento**
+**2. Criação de um Azure Web App (App Service) no plano S1 (App Service plan) com dois Slots para implantação, sendo um para produção e outro para desenvolvimento**
 - criação do App Service com slot de produção (production):
   - App Services -> Create (waMyTodoList)
 - criação de um slot de implantação para desenvolvimento separado do slot de produção:
   - App Service - Deployment slots -> Add Slot (dev)
+
+**App Service plan: App e Slot**
+![image](https://user-images.githubusercontent.com/101406714/163691800-82b37187-c01b-4d3d-bef0-f04a56150d64.png)
+
+**Slots de Implantação do App Service:**
+![image](https://user-images.githubusercontent.com/101406714/163692002-7a2ceaaa-8a18-48e5-943b-221b834d7516.png)
 
 **3. Criação de dois bancos Azure SQL Database Standard S0 chamado coreDB, sendo um para produção e um para desenvolvimento**
 - criação da instância SQL Server:
@@ -19,18 +25,26 @@ https://github.com/Azure-Samples/msdocs-app-service-sqldb-dotnetcore
 - criação da base de dados:
   - SQL Databases -> Create
 
-- Instância e base de dados para produção (coredbserver-m05/coreDB) 
-- Instância e base de dados para desenvolvimento (coredbserver-m05dev/coreDB):
+**Instância e base de dados para produção (coredbserver-m05/coreDB):**
+![image](https://user-images.githubusercontent.com/101406714/163692112-bbfb6b65-f8d8-4409-989d-514289205bc6.png)
+
+**Instância e base de dados para desenvolvimento (coredbserver-m05dev/coreDB):**
+![image](https://user-images.githubusercontent.com/101406714/163692173-2cf8e6e3-2bd1-4171-9187-e60228d738c4.png)
 
 ## Configuração do ambiente do Azure DevOps
 
 **4. Na sua organização dentro do Azure DevOps, criar um Novo Projeto**
 - \+ New project
 
+![image](https://user-images.githubusercontent.com/101406714/163692481-0a40ed1a-c568-44c8-a7f9-39c95d1276a7.png)
+
 **5. Importação do repositório no Gihub para o Azure DevOps – Repos.**
 (temos no repositório o código da aplicação e o schema do banco de dados)
 
 - Azure DevOps -> Repos -> Import
+
+![image](https://user-images.githubusercontent.com/101406714/163692677-3d942687-518d-4996-8421-dedd1962a908.png)
+
 - Clonar repositório para realizar testes de alterações (repo "AppService-SQLdb-dotnetcore"):
 ```
 git clone https://[clone_URL]
@@ -41,11 +55,15 @@ git add .
 git commit -m "commit inicial VSCode"
 git push
 ```
+![image](https://user-images.githubusercontent.com/101406714/163692771-4606e24f-12b1-40df-937c-9690bd1f32e3.png)
+
 ## Deploy do Web App - configuração do processo de DevOps CI/CD
 
 **6. Deploy do App Service (ambiente de desenvolvimento):**
 - App Service -> Deployment slots -> selecione o slot para desenvolvimento
 - Slot-dev -> Deployment Center: configurar CI/CD para fonte (source) no Azure Repos
+
+![image](https://user-images.githubusercontent.com/101406714/163692898-110bec43-b704-4659-b7be-f626571e206a.png)
 
 ## Configuração da conexão com o banco de dados e geração das bases de dados
 
@@ -60,12 +78,17 @@ dev:
 ```
 Server=tcp:coredbserver-m05dev.database.windows.net,1433;Initial Catalog=coreDB;Persist Security Info=False;User ID={your_user};Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 ```
-- configuração do App Service no slot de Produção:
+- configuração da conexão do App Service no slot de Produção:
   - Configuration -> Connection strings -> New Connection string (MyDbConnection)
   (marcar opção "Deployment slot setting")
-- configuração do App Service no slot de Desenvolvimento:
+
+![image](https://user-images.githubusercontent.com/101406714/163693378-761502a7-ed8e-4f4d-a6e3-b8afc830223a.png)
+
+- configuração da conexão do App Service no slot de Desenvolvimento:
   - Configuration -> Connection strings -> New Connection string (MyDbConnection)
   (marcar opção "Deployment slot setting")
+  
+![image](https://user-images.githubusercontent.com/101406714/163693436-5f9a042a-bc5f-490a-83c6-a3f1d6508a81.png)
 
 **8. Geração das Bases de Dados de Produção e Desenvolvimento**
 - CLI: rodar comando para instalar "Entity Framework Core"
@@ -90,10 +113,16 @@ dotnet ef database update
 - CLI: rodar comandos para commit e deploy das alterações (Azure Repos)
 ```
 git add .
-git commit -m "alteracoes de teste"
+git commit -m "index - alteracoes de teste"
 git push
 ```
-(a partir daqui o pipeline de CI/CD do *Deployment Center* será executado para deploy no Slot de Desenvolvimento)
+**Execução do pipeline de CI/CD do *Deployment Center* para o deploy no Slot de Desenvolvimento:**
+
+![image](https://user-images.githubusercontent.com/101406714/163693054-0182060f-4563-48fd-a0f8-4842ffbf9809.png)
+
+**Detalhes da execução do pipeline:**
+
+![image](https://user-images.githubusercontent.com/101406714/163693189-38f39712-6ce5-4e6d-9578-5869ded5ece7.png)
 
 ## Deploy do Web App em Produção
 
