@@ -13,7 +13,7 @@ https://github.com/Azure-Samples/msdocs-app-service-sqldb-dotnetcore
 - criação de um slot de implantação para desenvolvimento separado do slot de produção:
   - App Service - Deployment slots -> Add Slot (dev)
 
-**App Service plan: App e Slot**
+**App Service plan - App e Slot:**
 ![image](https://user-images.githubusercontent.com/101406714/163691800-82b37187-c01b-4d3d-bef0-f04a56150d64.png)
 
 **Slots de Implantação do App Service:**
@@ -129,20 +129,29 @@ git push
 **10. Deploy do App a partir do Slot de desenvolvimento para o Slot de produção**
 - Swap manual:
   - App Service -> Deployment Slots -> Swap
+
+![image](https://user-images.githubusercontent.com/101406714/163840876-5ed7170b-963d-4e26-91e5-67593063a438.png)
+
 - Auto Swap - realizar configuração no App Service para realizar swap automático (slot dev -> slot prod):
   - App Service -> Deployment slots -> selecione o slot para desenvolvimento
   - Slot-dev -> Configuration -> General settings -> Auto swap enabled: On ; deployment: production
 
+![image](https://user-images.githubusercontent.com/101406714/163841244-7dddf91c-9f2a-4947-8ede-e2d0fc4ed1ee.png)
+
+**Exemplo do aplicação publicada já com algumas alterações realizadas e implantadas:**
+![image](https://user-images.githubusercontent.com/101406714/163839098-624ae0e1-8a79-4b5a-ae04-3a1918d65ecf.png)
+
 **11. Rotear manualmnete o tráfego entre o slot de produção e desenvolvimento a partir da URL**
-- utilizar na URL a query: `?x-ms-routing-name={slot_name}`
+- adicionar na URL a query: `?x-ms-routing-name={slot_name}`
 ```
 URL: <webappname>.azurewebsites.net/?x-ms-routing-name={slot_name}
 ```
 - por exemplo:
-  - slot de desenvolvimento (dev):
-    `https://wamytodolist.azurewebsites.net/?x-ms-routing-name=dev`
-  - slot de produção (self):
-    `https://wamytodolist.azurewebsites.net/?x-ms-routing-name=self`
+  - slot de desenvolvimento (dev): `https://wamytodolist.azurewebsites.net/?x-ms-routing-name=dev`
+  ![image](https://user-images.githubusercontent.com/101406714/163839679-22c56b3f-b6f9-425b-acbb-a92f7110f0c4.png)
+
+  - slot de produção (self): `https://wamytodolist.azurewebsites.net/?x-ms-routing-name=self`
+  ![image](https://user-images.githubusercontent.com/101406714/163839974-f3197379-933e-4bf5-9365-8e754aec3f2b.png)
     
 *Seria um cenário interessante aonde você pode ocultar o slot de desenvolvimento para o público mas possibilitar que sua equipe interna realize testes nesse slot.*
 
